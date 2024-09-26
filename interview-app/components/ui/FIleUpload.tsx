@@ -3,7 +3,7 @@ import { BsFiletypePdf } from "react-icons/bs";
 import { UploadDropzone } from "@/lib/uploadthing";
 import "@uploadthing/react/styles.css";
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface FileUploadProps {
     onChange: (url?: string) => void;
@@ -20,10 +20,16 @@ const FileUpload = ({
 }: FileUploadProps) => {
     const [fileInfo, setFileInfo] = useState<{ name: string; size: number } | null>(null);
 
-    // If there is a value (uploaded file), display its information
+    
+    useEffect(() => {
+        if (!value) {
+            setFileInfo(null);  
+        }
+    }, [value]);
+
     const handleRemoveFile = () => {
-        onChange(""); // Clear the uploaded file
-        setFileInfo(null); // Reset file info
+        onChange("");  
+        setFileInfo(null); 
     };
 
     return (

@@ -17,6 +17,8 @@ import {
   SignedOut,
   UserButton
 } from '@clerk/nextjs'
+import { Toaster } from '@/components/ui/toaster';
+import Header from '@/components/Header';
  
  
 
@@ -40,8 +42,10 @@ export default async function RootLayout({
   <ClerkProvider> 
     <html lang="en" suppressHydrationWarning>
       <body className={cn(font.className)}>   
+      <Header />
             {children} 
             <ModalProvider/> 
+            <Toaster />
       </body>
     </html>
     </ClerkProvider>

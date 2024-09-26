@@ -6,29 +6,31 @@
 // export const initialProfile = async () => {
 //   const user = await currentUser();
 
-//   // Check if the user is authenticated
 //   if (!user) {
 //     return RedirectToSignIn({ redirectUrl: "/sign-in" });
 //   }
 
-//   // Check if a profile already exists for this user
-//   const profile = await db.profile.findUnique({
+//   // Make sure to extract the ID correctly
+//   const userId = user.id; // This ID should be a valid MongoDB ObjectID
+
+//   const profile = await db.user.findUnique({
 //     where: {
-//       userId: user.id,
+//       id: userId, // Ensure this is the correct ID format
 //     },
 //   });
 
-//   // If profile exists, return it
 //   if (profile) {
 //     return profile;
 //   }
 
-//   // If no profile exists, create a new one
-//   const newProfile = await db.profile.create({
+//   const newProfile = await db.user.create({
 //     data: {
-//       userId: user.id,
-//       name: `${user.firstName} ${user.lastName}`,
-//       email: user.emailAddresses[0]?.emailAddress || null,
+//       id: userId, // Ensure the id is set properly
+//       firstname: user.firstName || "",
+//       lastname: user.lastName || "",
+//       email: user.emailAddresses[0]?.emailAddress || "",
+//       resume:"",
+//       phone:""
 //     },
 //   });
 

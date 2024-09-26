@@ -8,10 +8,10 @@ datasource db {
 }
 
 model User {
-  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId 
   firstname String
   lastname  String
-  email     String      @unique
+  email     String   @unique
   phone     String
   resume    String
   interviews Interview[] // Relation to Interview
@@ -19,13 +19,15 @@ model User {
 }
 
 model Interview {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id]) // Relation to User
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId  
+  userId    String    
+  user      User     @relation(fields: [userId], references: [id])  
   position  String
   date      DateTime
   status    String
   createdAt DateTime @default(now())
+
+  @@unique([userId, position]) 
 }
 
 model Question {
@@ -36,8 +38,8 @@ model Question {
 
 model Answer {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId     String    @db.ObjectId
-  questionId String    @db.ObjectId
+  userId     String   
+  questionId String     
   answer     String
 
   user       User      @relation(fields: [userId], references: [id]) // Relation to User

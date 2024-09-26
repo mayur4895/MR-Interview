@@ -1,32 +1,54 @@
 import { db } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
- 
 
 export async function POST(req: NextRequest) {
   try {
-    const { firstname, lastname, email, phone, resume, position } = await req.json();
+ 
+    const { userId, firstname, lastname, email, phone, resume, position } = await req.json();
 
-    // Save the interview data into the database
-    const newInterview = await  db.interview.create({
-      data: {
-        user: {
-          connectOrCreate: {
-            where: { email },
-            create: {
-              firstname,
-              lastname,
-              email,
-              phone,
-              resume,
-            },
-          },
-        },
-        position,  // The position field from the form
-        date: new Date(),  // Add a date for the interview (you could get this from the form as well)
-        status: 'pending',  // Default status
+ 
+    const existingInterview = await db.interview.findFirst({
+      where: {
+        userId,  
+        position,
       },
     });
 
+   
+    if (existingInterview) {
+      return NextResponse.json({ error: 'Interview for this position already exists for this user.' }, { status: 400 });
+    }
+
+  
+    const user = await db.user.upsert({
+      where: { id: userId },
+      update: {
+        firstname, 
+        lastname,  
+        email,     
+        phone,    
+        resume,   
+      },
+      create: {
+        firstname,  
+        lastname,  
+        email,     
+        phone,    
+        resume,    
+      },
+    });
+
+   
+    const newInterview = await db.interview.create({
+      data: {
+        userId: user.id, 
+        position,
+        date: new Date(),
+        status: 'pending',
+      },
+    });
+
+ 
     return NextResponse.json({ message: 'Interview created successfully', interview: newInterview }, { status: 201 });
   } catch (error) {
     console.error('Error saving interview:', error);

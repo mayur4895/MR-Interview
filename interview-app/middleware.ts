@@ -8,16 +8,16 @@ const isRootRoute = createRouteMatcher(['/'])
 export default clerkMiddleware((auth, req) => {
   const { userId } = auth()
 
-  // For users visiting the root route
+ 
   if (isRootRoute(req)) {
-    // If the user isn't signed in, redirect to sign-in
+   
     if (!userId) {
       const signInUrl = new URL('/sign-in', req.url)
       return NextResponse.redirect(signInUrl)
     }
   }
 
-  // For all other routes, protect them unless they are public
+ 
   if (!isPublicRoute(req)) {
     auth().protect()
   }
